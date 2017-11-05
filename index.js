@@ -14,11 +14,29 @@ app.get('/repo/:username', (req, res) => {
   github.repos.getForUser({
     username: username
   }).then((response) => {
-    res.send(response);
+    res.send(getBasicDetails(response.data));
   }).catch((err) => {
     res.sendStatus(500);
     res.send(err);
   });
 });
 
-app.listen(port, () => console.log('Example app listening on port 3000!'));
+function getBasicDetails(data) {
+  if (data && data.length) {
+    data = data.map((repos) => {
+      if (!repos.fork) {
+        return {
+          name: repos.name,
+          description: repos.description, 
+          url: repos.html_url,
+        }
+      }
+    }).filter((repos) => {
+      return repos && Object.keys(repos).length
+    });
+    return data;
+  }
+  throw 'No data has found';
+}
+
+app.listen(port, () => console.log(`Example app listening on port ${port}!`));
