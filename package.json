@@ -1,0 +1,16 @@
+{
+  "name": "portfolio-server",
+  "version": "1.0.0",
+  "description": "In completion of FreeCodeCamp front end certificate - A personal portfolo written in javascript",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node ."
+  },
+  "author": "JM Santos",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.16.2",
+    "github": "^12.0.1"
+  }
+}
