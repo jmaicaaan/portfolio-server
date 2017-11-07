@@ -1,9 +1,12 @@
 const express = require('express');
 const githubAPI = require('github');
+const cors = require('cors');
 const github = new githubAPI({});
 
 const app = express();
 const port = process.env.PORT || 3000
+
+app.use(cors());
 
 app.get('/repo/:username', (req, res) => {
   let username = req.params['username'];
