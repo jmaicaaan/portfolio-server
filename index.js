@@ -9,7 +9,7 @@ const port = process.env.PORT || 3000
 
 github.authenticate({
   type: 'token',
-  token: '35a85f5f8ff48f417b51ef7ff0e5c5c2001351c9' //restrict access
+  token: process.env.TOKEN
 });
 
 app.use(cors());
@@ -23,7 +23,8 @@ app.get('/repo/:username', (req, res) => {
   github.repos.getForUser({
     username: username
   }).then((response) => {
-    res.send(getBasicDetails(response.data));
+    getBasicDetails(response.data)
+      .then((data) => res.send(data));
   }).catch((err) => {
     res.sendStatus(500);
     res.send(err);
@@ -31,7 +32,7 @@ app.get('/repo/:username', (req, res) => {
 });
 
 function getBasicDetails(data) {
-  if (data && data.length) {
+  if (data && data.length > 0) {
     return promise.map(data, (repository) => {
       return getRepoLanguage(repository.name)
         .then((language) => {
@@ -63,5 +64,15 @@ function getRepoLanguage(repositoryName) {
   return github.repos.getLanguages({ owner: 'jmaicaaan', repo: repositoryName })
     .then((language) => language);
 }
+
+function getUserDetails() {
+  return github.users.get({})
+    .then((user) => user.data);  
+}
+
+app.get('/user', (req, res) => {
+  getUserDetails()
+    .then((user) => res.send(user));
+});
 
 app.listen(port, () => console.log(`Example app listening on port ${port}!`));
